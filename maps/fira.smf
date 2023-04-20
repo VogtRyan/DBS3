@@ -1,0 +1,210 @@
+# Taken from Google Maps
+# The units used to define the map are from the original Google Maps snapshot
+# of Fira, whereas the view image is a scaled-down version (small enough to
+# display on a laptop screen).
+
+# The view map is scaled to 75% of original size, to fit on small screens.
+# So, 105 * 3/4 px = 100m
+view scale 0.7875 using firaMap.jpg name Fira map
+
+# 105 units below = 100m
+unitsToMetres 0.952380952380952
+
+# Assume a default width of about 5m (5.25 units)
+defaultWidth 5.25
+
+# The donkey path
+street from 801 676 to 770 687 name Donkey Path
+onto 811 624
+onto 762 638
+onto 743 659
+onto 763 612
+onto 714 660
+onto 716 641
+onto 703 643
+onto 723 604
+onto 684 626
+onto 738 517
+onto 689 531
+onto 732 480
+onto 681 486
+onto 712 458
+onto 745 451
+onto 742 441
+onto 708 445
+onto 745 417
+
+# Agiou Mina and connecting bits of street in the west (bottom of map)
+street from 4 602 to 122 628 width 8.4 name Agiou Mina
+onto 167 657
+onto 404 645
+onto 436 615
+onto 422 521
+onto 383 502
+onto 360 459
+onto 298 454
+onto 280 381
+onto 194 379
+street from 422 521 to 529 457 width 8.4 name Agiou Mina
+street from 432 560 to 522 507 width 8.4 name Agiou Mina
+onto 566 464
+onto 596 463
+onto 641 429
+onto 730 412
+onto 737 399
+onto 770 402
+onto 810 348
+onto 993 333
+onto 1010 324
+onto 1060 357
+onto 1112 357
+onto 1186 255
+onto 1161 182
+onto 1155 117
+street from 727 412 to 772 418 name Agiou Mina   # Narrower portion in far west
+onto 809 397
+onto 832 398
+onto 881 377
+onto 977 386
+onto 1042 429
+onto 1079 425
+onto 1127 381
+onto 1120 341
+street from 317 648 to 307 588 name Agiou Mina   # Alley in north
+onto 312 504
+onto 356 518
+street from 351 564 to 361 458 name Agiou Mina
+street from 592 467 to 593 403 name Agiou Mina   # Side street mid-map
+onto 724 369
+
+# The main streeet through the centre of the map
+street from 4 479 to 48 503 width 8.4 name Eikostis Pemptis Martiou
+onto 105 471
+onto 237 343
+onto 366 331
+onto 472 306
+onto 610 302
+onto 687 285
+onto 913 261
+street from 595 301 to 594 379 name Eikostis side-street
+onto 692 339
+onto 753 336
+onto 806 321
+street from 811 309 to 1040 208 width 8.4 name Nte Sigala
+onto 1188 178
+
+# Cluster of streets around Danezi
+street from 811 357 to 797 129 width 8.4 name Danezi
+street from 853 347 to 843 293 name Side-street between A. Mina and N. Sigala
+street from 769 272 to 769 199 name Danezi
+onto 801 199
+street from 804 207 to 856 207 width 6.3 name Danezi
+street from 804 234 to 857 231 width 6.3 name Danezi
+street from 856 268 to 854 195 width 6.3 name Danezi
+onto 890 195
+onto 884 139
+street from 964 241 to 954 106 width 6.3 name Elkaza
+street from 1009 326 to 1009 284 width 6.3 name Mitropoleos
+onto 1040 257
+onto 1027 88
+street from 669 164 to 801 167 width 6.3 name Danezi
+onto 834 129
+onto 815 26
+street from 818 146 to 915 138 width 6.3 name Danezi-Mitropoleos Link
+onto 917 150
+onto 1033 142
+
+# Thiras-Oias along east (top) of map
+street from 1193 55 to 860 130 width 8.4 name Thiras-Oias
+onto 600 116
+onto 469 15
+onto 292 82
+onto 255 124
+onto 215 131
+onto 120 176
+onto 63 195
+onto 62 213
+onto 78 221
+onto 197 223
+onto 199 242
+onto 151 252
+onto 75 304
+onto 36 395
+onto 15 404
+
+# Exits off the map to the south-east
+street from 1029 105 to 1176 117 width 8.4 name South Exit
+onto 1194 113
+street from 995 97 to 975 5 width 6.5 name South-East Exit
+street from 934 115 to 919 5 width 6.5 name South-East Connected Exit
+street from 822 65 to 924 45 width 6.5 name Exit Connector Street
+street from 756 126 to 747 5 width 6.5 name South-Central Exit
+
+# Long road containing Dana Villas
+street from 17 583 to 96 549 width 6.5 name Dana Villas Road
+onto 164 485
+onto 221 446
+onto 362 412
+onto 429 413
+onto 441 309
+onto 473 224   # Now east of Eikostis Pemptis Martiou
+onto 480 156
+onto 497 134
+onto 551 122
+onto 567 134
+onto 641 151
+onto 673 136
+onto 798 145
+street from 5 560 to 62 554 width 8.4 name Eikostis Branch
+onto 104 472
+street from 17 561 to 16 602 width 6.5 name Northern Connector
+street from 84 555 to 119 559 width 6.5 name Small World Road
+onto 139 594
+onto 197 602
+
+# Cluster between the Dana Villas Road and Eikostis Pemptis Martiou
+street from 469 233 to 558 174 name Cluster Connector
+onto 566 132
+street from 548 304 to 572 251 name Cluster Connector
+onto 566 220
+onto 533 220
+onto 523 195
+street from 533 220 to 533 258 name Cluster Dead End
+
+# Two north-east exits out of map
+street from 479 160 to 455 146 width 6.5 name East Exit
+onto 444 113
+onto 393 96
+onto 373 5
+street from 393 96 to 331 117 name North-East Exit
+onto 318 93
+onto 278 79
+onto 255 54
+onto 177 59
+onto 164 19
+onto 128 5
+
+# Spidering streets near north end of map
+street from 390 324 to 377 287 name Snaking Street
+onto 302 243
+onto 307 230
+onto 384 202
+onto 415 163
+onto 456 145
+street from 416 163 to 405 149 name Snaking Street
+onto 422 107
+street from 385 200 to 412 221 name Snaking Street
+onto 476 199
+street from 151 424 to 132 405 name Snaking Street
+onto 142 340
+onto 224 286
+onto 252 258
+onto 306 242
+street from 200 227 to 275 203 name Snaking Street
+street from 276 251 to 270 232 name Snaking Street
+onto 276 197
+street from 276 197 to 252 124 width 2.1 name Alley
+street from 276 197 to 298 196 width 2.1 name Alley
+onto 318 184
+onto 315 136
+onto 333 118

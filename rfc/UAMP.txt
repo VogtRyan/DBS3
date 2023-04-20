@@ -1,0 +1,268 @@
+UNIVERSITY OF ALBERTA MOBILITY PROTOCOL (UAMP) SPECIFICATION
+============================================================
+
+Ryan Vogt
+Version 2.1
+October 22, 2010
+
+1. PURPOSE
+==========
+
+The UAMP specification defines a server that can send mobility model
+results to a UAMP client.  For example, the UAMP client could be a wireless
+network simulator that requires mobility data, or an epidemic simulator
+that requires human movement data.
+
+2. DATA TYPES
+=============
+
+The following data types are used by the UAMP protocol.
+
+Byte: a single 8-bit byte, e.g., 0x80.
+
+Integer: a 32-bit unsigned network-order integer; e.g., in C,
+uint32_t encoded = htonl(value).
+
+Time: a single Integer, as defined above.  A time value is to be
+interpreted as a number of MILLISECONDS.  As such, the maximum amount of
+time that can be encoded as a Time value is just under 50 days.
+
+CoordinateSet: two or three Integers, as defined above.  The first Integer
+encodes the X value of the CoordinateSet, and the second Integer encodes the Y
+value.  If applicable (see Section 4A), the third Integer encodes the Z value.
+Each value in the CoordinateSet is to be interpreted as a number of MILLIMETRES
+from the origin.  The origin is an arbitrary point in the north-west (upper-
+left) at ground level beyond which locations cannot be represented as a
+CoordinateSet.  The maximum distance in any three-dimensional Euclidean
+direction from the origin that can be represented is just under 4300 km.
+
+BitField(n): a sequence of n bits, where n is a multiple of 8.  BitFields can
+be interpreted as a series of flags that are either set or unset.  For a
+BitField b, the value b[1] is the first bit transmitted (i.e., the high bit of
+the first byte) and b[n] is the last bit transmitted (i.e., the low bit of the
+last byte).
+
+3. HIGH-LEVEL DESIGN
+====================
+
+The UAMP client and server first complete a handshake, in which the client
+specifies parameters for the movement data it requires from the server.
+After the handshake is complete, the client sends LOCATION_REQUEST messages
+to the server, requesting more movement data for any agent.
+
+On receiving a LOCATION_REQUEST message for agent i, the server simulates
+the movement of agent i until time t, where t is the next time at which one
+of the following conditions is met for agent i:
+
+- t = 0 (i.e., it is the beginning of the simulation for agent i);
+- t = the duration of the simulation;
+- Agent i changes speed or direction at time t; or,
+- Agent i is added to or removed from the simulation environment at time t.
+
+The UAMP server then replies with a LOCATION_REPLY message, consisting of
+the timestamp t, and the location of agent i at that time.
+
+Because the client receives the location of each agent at time 0, at the
+duration of the simulation, and each time the agent changes speed or
+direction, the client can interpolate the position of any agent at any
+time.
+
+4. MESSAGE SPECIFICATION
+========================
+
+4A. INITIALIZATION PHASE
+------------------------
+
+After connecting to the server, the client sends a BEGIN_UAMP message to
+the server and the server also sends a BEGIN_UAMP message to the client (a
+UAMP server MUST send the BEGIN_UAMP message, even if it receives a message
+other than a BEGIN_UAMP message from the client, and vice versa).
+
+BEGIN_UAMP: 0x55 0x41 0x4d 0x50 VERSIONS_SUPPORTED UAMP_FLAGS
+
+That is, the BEGIN_UAMP message is the four ASCII characters "UAMP" followed by
+the VERSIONS_SUPPORTED and UAMP_FLAGS fields.
+
+VERSIONS_SUPPORTED is a BitField(8), encoding which major versions of the UAMP
+RFC are supported by the sender.  The sender should set VERSIONS_SUPPORTED[1]
+if they support version two of the UAMP protocol (this RFC).  The other 7 bits
+are reserved for future versions of the UAMP protocol (version one of the UAMP
+protocol was an internal development protocol, and is completely deprecated).
+
+UAMP_FLAGS is a BitField(32), encoding variants of the UAMP protocol that are
+supported or required by the sender.  UAMP_FLAGS[1] is defined as the
+THREE_DIMENSIONS flag.  UAMP_FLAGS[2] is defined as the ADD_REMOVE flag.  The
+other 30 bits are reserved for future use.
+
+The THREE_DIMENSIONS flag: typically, a UAMP server sends two-dimensional
+mobility data to the client (i.e., CoordinateSet data consists of two
+Integers).  However, a UAMP server can send three-dimensional mobility data to
+the client instead (i.e., CoordinateSet data consists of three Integers).  If a
+server will send three-dimensional data to the client, it MUST set its
+THREE_DIMENSIONS flag.  Conversely, all UAMP clients MUST support receiving
+two-dimensional mobility data.  If a client also supports receiving three-
+dimensional mobility data, it SHOULD set its THREE_DIMENSIONS flag.
+
+The ADD_REMOVE flag: typically, a UAMP server simulation contains some number
+of agents that are always present in the environment.  However, a UAMP server
+can add or remove the agents being simulated from the environment.  While the
+total number of agents remains fixed, the individual agents can be added to or
+removed from the environment (potentially repeatedly) by the server.  If a
+server will send addition and removal data to the client, it MUST set its
+ADD_REMOVE flag.  Conversely, all UAMP clients MUST support receiving data
+without additions and removals (i.e., data in which all agents are present at
+all times).  If a client also supports receiving data with additions and
+removals, it SHOULD set its ADD_REMOVE flag.
+
+Both the client and server process the messages that they receive from the
+other party.  Both client and server SHOULD ignore any flags set in the
+VERSIONS_SUPPORTED and UAMP_FLAGS BitFields that they do not understand.  If
+any of the following conditions are true, each party must send an
+INITIALIZATION_FAILED message to the other then disconnect:
+
+- The message received is not a BEGIN_UAMP message.
+- There is no common version of UAMP supported by both the client and the
+  server (i.e., there is no bit that is set in both the VERSIONS_SUPPORTED
+  BitField sent by the server and the BitField sent by the client).
+- The server's THREE_DIMENSIONS flag was set, but the client's THREE_DIMENSIONS
+  flag was not set (that is, the server will send three-dimensional data, but
+  the client does not support receiving it).
+- The server's ADD_REMOVE flag was set, but the client's ADD_REMOVE flag was
+  not set (that is, the server will send data with additions and removals, but
+  the client does not support receiving it).
+
+INITIALIZATION_FAILED: 0x00
+
+Otherwise, the client and server MUST send a VERSION_CHOICE message to each
+other.  The VERSION_CHOICE message is a BitField(8) with exactly one bit set.
+The bit that is set MUST represent the highest version of the UAMP RFC that was
+set in both the server's VERSIONS_SUPPORTED message and the client's
+VERSIONS_SUPPORTED message.
+
+If either party receives an INITIALIZATION_FAILED message, the client and
+server MUST disconnect.  Additionally, if either party receives a
+VERSION_CHOICE message that does not match the VERSION_CHOICE message that they
+sent, the client and server MUST disconnect.  Otherwise, the client and server
+proceed to the REQUEST PHASE (see Section 4B).
+
+4B. REQUEST PHASE
+-----------------
+
+The client begins the REQUEST PHASE by sending a SIMULATION_REQUEST message
+to the server.
+
+SIMULATION_REQUEST: NUM_AGENTS TIME_LIMIT SEED
+
+NUM_AGENTS: an Integer that MUST be greater than zero, denoting the number
+of unique mobile individuals that the server will simulate.
+
+TIME_LIMIT: a Time value, denoting the maximum amount of time for which the
+server MUST be able to produce mobility data for all of the agents.  As
+noted in Section 4C, the client has the ability to tell the server to halt
+the simulation prematurely.  If the client does not know a priori the
+amount of time for which it needs movement data, it SHOULD send the maximum
+Time value of 0xFFFFFFFF.
+
+SEED: an Integer, which the server SHOULD use to randomly perturb its
+simulation.  The server MUST adhere to the property: any simulation using
+SEED = s, NUM_AGENTS >= n, and TIME_LIMIT >= t will produce the same
+location for agent n at time t.
+
+The server responds with either a REQUEST_OKAY message or a REQUEST_DENIED
+message.  If the REQUEST_OKAY message is sent, the client and server
+proceed to the UPDATE PHASE (see Section 4C).  If the REQUEST_DENIED
+message is sent, the client and server MUST disconnect.
+
+REQUEST_OKAY: 0x00
+
+REQUEST_DENIED: 0x01
+
+4C. UPDATE PHASE
+----------------
+
+The client begins the UPDATE PHASE by sending one of two commands to the
+server: LOCATION_REQUEST or TERMINATE_SIMULATION.
+
+TERMINATE_SIMULATION: 0x00 0x00 0x00 0x00 0x00
+
+If the TERMINATE_SIMULATION message is sent, the client and server MUST
+disconnect.
+
+LOCATION_REQUEST: 0x01 NUM_REQUESTS AGENT_ID AGENT_ID AGENT_ID ...
+
+NUM_REQUESTS: an Integer that MUST be greater than zero.  This value represents
+the number of AGENT_IDs that will follow.  The NUM_REQUESTS AGENT_ID values
+need not be unique.
+
+AGENT_ID: an Integer that MUST be strictly less than NUM_AGENTS (see
+Section 4B).  That is, agents are indexed from 0 to NUM_AGENTS-1.
+
+Upon receiving a LOCATION_REQUEST message, the server MUST reply with a
+LOCATION_REPLY message for each AGENT_ID in the LOCATION_REQUEST.  A
+LOCATION_REPLY message corresponds to:
+
+- The location of agent AGENT_ID at time t = 0, if that data has not yet
+  been sent;
+- The location of agent AGENT_ID at time t, where time t is the next time
+  (i.e., t is strictly greater than any previously sent time for agent
+  AGENT_ID) at which agent AGENT_ID changes speed or direction, or is added to
+  or removed from the simulation environment; or,
+- The location of agent AGENT_ID at time t = TIME_LIMIT (see Section 4B),
+  if all other LOCATION_REPLY messages for agent AGENT_ID have already been
+  sent.
+
+Since the AGENT_ID values in a LOCATION_REQUEST need not be unique, a
+LOCATION_REQUEST can potentially request multiple successive LOCATION_REPLY
+messages for a given agent.
+
+LOCATION_REPLY: REPLY_TIME REPLY_PLACE (PRESENT)
+
+REPLY_TIME: a Time value, corresponding to the time t in the above list.
+If a client sends a LOCATION_REQUEST for agent AGENT_ID, where the server
+has already sent a LOCATION_REPLY for time TIME_LIMIT and agent AGENT_ID,
+then server MUST reply with the exact same LOCATION_REPLY message previously
+sent for time TIME_LIMIT.
+
+REPLY_PLACE: a CoordinateSet value, corresponding to the location of agent
+AGENT_ID at time REPLY_TIME.  Typically, CoordinateSet values consist of two
+Integers.  However, a CoordinateSet will consist of three Integers if the
+server set its THREE_DIMENSIONS bit in the BEGIN_UAMP message (see Section 4A).
+If a client desires three-dimensional mobility data but the server provides
+two-dimensional data, the client SHOULD interpret the missing Z coordinate as
+Z=0.
+
+PRESENT: either 0x00 or 0x01.  Typically, this Byte is omitted from
+LOCATION_REPLY messages.  However, if the server set its ADD_REMOVE bit in the
+BEGIN_UAMP message (see Section 4A), this Byte will be included.  A value of
+0x00 indicates that the agent is (or becomes) not present in the simulation
+environment at time REPLY_TIME.  A value of 0x01 indicates that the agent is
+(or becomes) present in the simulation environment at time REPLY_TIME.  If a
+client desires addition and removal data but the server does not provide it,
+the client SHOULD interpret the missing PRESENT byte as always being equal to
+0x01 (that is, all agents are always present).
+
+Note: regardless of any additions or removals of agents, the server MUST still
+send updates for all agents at time t = 0 and time t = TIME_LIMIT when
+requested, as described above.  If an agent is not present in the environment
+at time t = 0, the server MUST send a LOCATION_REPLY message for time t = 0
+with arbitrary coordinate values, and PRESENT = 0x00, and when requested a
+subsequent LOCATION_REPLY for the time and location at which the agent is added
+to the environment.  Similarly, if an agent is removed from the environment for
+the remainder of the simulation, the server must still send LOCATION_REPLY
+messages for time t = TIME_LIMIT when requested, with arbitrary fixed
+coordinates and PRESENT = 0x00.  The first update sent by the server for a
+given agent with PRESENT = 0x01, after any number of updates with PRESENT =
+0x00 for that agent, indicates the agent (re)appearing at the given coordinates
+at the given time.  The first update sent by the server for a given agent with
+PRESENT = 0x00, after any number of updates with PRESENT = 0x01 for that agent,
+indicates the agent moving to the given coordinates, arriving at the given
+time, then disappearing.
+
+After the LOCATION_REPLY message is sent, the client and server return to
+the beginning of the UPDATE PHASE.
+
+Note: because Time values are sent as milliseconds, and because REPLY_TIME
+values are required to be strictly increasing (with the exception of
+re-requested locations at time TIME_LIMIT), REPLY_TIME MUST in general be
+at least one millisecond greater than previously sent REPLY_TIMEs for the
+same AGENT_ID.

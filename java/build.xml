@@ -1,0 +1,69 @@
+<!--
+   - Copyright (c) 2009-2023 Ryan Vogt <rvogt@ualberta.ca>
+   -
+   - Permission to use, copy, modify, and/or distribute this software for any
+   - purpose with or without fee is hereby granted, provided that the above
+   - copyright notice and this permission notice appear in all copies.
+   -
+   - THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+   - WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+   - MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+   - ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+   - WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+   - ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+   - OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  -->
+
+<project name="DBS3" default="compile" basedir=".">
+  <target name="init">
+    <property name="sourceDir" value="./src/" />
+    <property name="outputDir" value="./class/" />
+    <property name="javadocDir" value="./javadoc/" />
+    <property name="liboutDir" value="./libout/" />
+    <property name="libFile" value="dbs3-1.2.0.jar" />
+  </target>
+  <target name="compile" depends="init">
+    <depend srcdir="${sourceDir}" destDir="${outputDir}" />
+    <javac srcdir="${sourceDir}" destDir="${outputDir}"
+           includeantruntime="false">
+      <compilerarg value="--release=9" />
+    </javac>
+  </target>
+  <target name="debug" depends="init">
+    <depend srcdir="${sourceDir}" destDir="${outputDir}" />
+    <javac srcdir="${sourceDir}" destDir="${outputDir}" debug="on"
+           includeantruntime="false">
+      <compilerarg value="-Xlint:unchecked" />
+      <compilerarg value="-Xlint:deprecation" />
+      <compilerarg value="--release=9" />
+    </javac>
+  </target>
+  <target name="javadoc" depends="init">
+    <javadoc destDir="${javadocDir}" additionalparam="-html5">
+      <fileset dir="${sourceDir}" includes="**/*.java" />
+    </javadoc>
+  </target>
+  <target name="library" depends="compile">
+    <delete>
+      <fileset dir="${liboutDir}" includes="${libFile}" defaultexcludes="no" />
+    </delete>
+    <jar destfile="${liboutDir}/${libFile}" basedir="${outputDir}"
+	 includesfile="${sourceDir}/ca/ualberta/dbs3/client/Contents.txt" />
+  </target>
+  <target name="tilde" depends="init">
+    <delete>
+      <fileset dir="${sourceDir}" includes="**/*.~" defaultexcludes="no" />
+    </delete>
+  </target>
+  <target name="clean" depends="init, tilde">
+    <delete includeemptydirs="true">
+      <fileset dir="${outputDir}" includes="**/*" />
+    </delete>
+    <delete includeemptydirs="true">
+      <fileset dir="${javadocDir}" includes="**/*" />
+    </delete>
+    <delete includeemptydirs="true">
+      <fileset dir="${liboutDir}" includes="**/*" />
+    </delete>
+  </target>
+</project>

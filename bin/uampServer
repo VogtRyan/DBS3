@@ -1,0 +1,120 @@
+#!/bin/sh
+
+# Copyright (c) 2009-2023 Ryan Vogt <rvogt@ualberta.ca>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+JVM_OPTS="-mx512m"
+PID_DIR="/tmp"
+
+# This script starts the UAMP server with the given parameters.
+#
+# If the "-daemonize" parameter appears anywhere in the set of parameters,
+# the server will detach from the shell, and the only standard output this
+# script will create is the server's PID (for later killing the server).
+# You do not need to include an "&" in the execution of this script; it will
+# already detach from the shell if "-daemonize" is present.
+#
+# If the "-daemonize" parameter does not appear in the set of parameters,
+# the server will run in the foreground, attached to this shell, and will
+# output its usual details on standard output (plus an exit-status message when
+# it terminates).
+
+cd $(dirname "$0")
+
+# Test if the -daemonize flag appears in the parameters
+runAsDaemon=0
+for p in "$@" ; do
+    case "${p}" in
+    "-daemonize")
+        runAsDaemon=1
+        ;;
+    *)
+        ;;
+    esac
+done
+
+# If not running as a daemon, simply run attached to the shell, and exit once
+# it is done.
+if [ ${runAsDaemon} -eq 0 ] ; then
+    java -classpath ../java/class/ ${JVM_OPTS} \
+        ca.ualberta.dbs3.server.UAMPServer $@
+    retCode=$?
+    echo "UAMP server execution complete (${retCode})" >&2
+    exit ${retCode}
+fi
+
+# Code below is for starting UAMPServer daemonized
+
+cancelmsg()
+{
+    echo 'Cancelling UAMP server startup' >&2
+}
+
+killmsg()
+{
+    echo 'Killing UAMP server' >&2
+}
+
+doKill=0
+trap "killmsg ; doKill=1" 2 3 15
+
+# The filename of the server's PID file contains the PID of this shell
+pidFile="${PID_DIR}/ca.ualberta.dbs3-$$.pid"
+
+# Block until the server outputs one line of output, which it will once it is
+# ready to accept connections in -daemonize mode. That single line of output
+# will contain the port number and the process ID, but that is not important
+# for this script (this script uses a more robust method for killing the
+# UAMPServer PID).
+dbs3msg=$(
+    (
+        innerKill=0
+        trap "cancelmsg ; innerKill=1" 2 3 15
+        java -classpath ../java/class/ ${JVM_OPTS} \
+            ca.ualberta.dbs3.server.UAMPServer $@ &
+        pid="$!"
+        echo "${pid}" > "${pidFile}"
+        pidContents=$(cat "${pidFile}")
+        if [ "${pidContents}" != "${pid}" ] ; then
+            echo "Could not read PID file ${pidFile}" >&2
+            innerKill=1
+        fi
+        if [ ${innerKill} -eq 1 ] ; then
+            kill "${pid}" >/dev/null 2>&1
+        fi
+    ) | head -1  # Will unblock after one line of output from UAMPServer
+)
+
+# Get DBS3's PID (from the subshell) out of the PID file, since the "$!" PID
+# in the inner shell is lost, and the "head -1" command could have been
+# SIGINT'ed before receiving the PID from the application.
+pid=$(cat "${pidFile}")
+rm "${pidFile}"
+
+# If at any point the script was killed, make sure the UAMPServer gets killed
+# as well.
+trap "killmsg ; kill ${pid} >/dev/null 2>&1 ; exit -1" 2 3 15
+if [ ${doKill} -eq 1 ] ; then
+    kill "${pid}" >/dev/null 2>&1
+    exit -1
+fi
+
+# Output the server's PID or an error message.
+if ps -p "${pid}" >/dev/null 2>&1 ; then
+    echo "${pid}"
+    exit 0
+else
+    echo "Error starting DBS3 UAMP server" >&2 
+    exit -1
+fi

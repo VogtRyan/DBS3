@@ -1,0 +1,3 @@
+The paper in this directory is a preprint of:
+
+R. Vogt, I. Nikolaidis, and P. Gburzynski. A Realistic Outdoor Urban Pedestrian Mobility Model. Simulation Modelling Practice and Theory 26 (2012) 113-134.

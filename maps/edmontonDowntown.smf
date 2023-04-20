@@ -1,0 +1,43 @@
+# Taken from Google Maps
+# Edmonton's downtown, from 97 St. - 109 St. and 104 Ave. - Jasper Ave.
+
+# Two Google maps images, where 70 px = 100 m
+view scale 0.7 using edmontonDowntownMap.jpg name Downtown Edmonton street map
+view scale 0.7 using edmontonDowntownPhoto.jpg name Downtown Edmonton photo
+
+# 70 units below = 100 m
+unitsToMetres 1.42857143
+
+# The width of most streets is approx. 18m (approx. 12.6 units)
+defaultWidth 12.6
+
+street from 1007 3 to 1096 381 width 20.2 name 97 Street
+street from 899 16 to 950 452 name 99 Street
+street from 819 22 to 871 459 name 100 Street
+street from 772 115 to 776 156 name City Centre Turn-in
+street from 765 288 to 785 467 name 100A Street
+street from 707 1 to 707 480 name 101 Street
+street from 622 55 to 622 233 name 102 Street North Segment
+street from 625 302 to 625 480 name 102 Street South Segment
+street from 536 55 to 536 480 name 103 Street
+street from 449 55 to 449 480 name 104 Street
+street from 362 1 to 362 480 name 105 Street
+street from 280 55 to 280 480 name 106 Street
+street from 193 55 to 193 480 name 107 Street
+street from 108 55 to 108 480 name 108 Street
+street from 23 1 to 23 480 width 16 name 109 Street
+
+street from 735 33 to 901 17 name 104 Avenue North Segment
+street from 14 55 to 827 59 width 16 name 104 Avenue Main
+street from 827 59 to 1015 27 width 16 name 103A Avenue
+street from 708 120 to 832 116 name 103 Avenue North Segment
+street from 14 185 to 705 189 name 103 Avenue Main
+street from 707 202 to 921 187 name 102A Avenue
+onto 1044 158
+street from 14 307 to 626 308 name 102 Avenue
+onto 981 265
+onto 1062 231
+street from 774 379 to 998 350 name 101A Avenue
+street from 14 475 to 709 473 width 16 name Jasper Avenue
+onto 981 440
+onto 1098 372

@@ -1,0 +1,145 @@
+MOBILITY VISUALIZATION PROTOCOL (MVISP) SPECIFICATION
+=====================================================
+
+Ryan Vogt
+Version 2.1
+October 22, 2010
+
+1. PURPOSE
+==========
+
+The MVISP specification defines a server that can send mobility results
+to an MVISP client, and receive state changes for the mobile agents from
+that client.  It is an essential component of visualizing mobile agents
+where the state of the agents can change in some way unknown to the
+mobility model.  This protocol is based on the UAMP specification, to
+maximize code reuse potential.
+
+As a concrete example, consider visualizing disease propagation among a
+mobile population of people in an urban environment.  The MVISP server is
+only responsible for computing the movement of people in the environment
+and displaying that movement to the end user in some suitable manner.  The
+MVISP client would be responsible for processing the mobility data it
+receives and reporting to the MVISP server when people (agents) transition
+between the uninfected, incubating, and contagious states.
+
+2. DATA TYPES
+=============
+
+The data types used by the MVISP protocol are identical to those used by
+the UAMP protocol, and are to be interpreted in the same manner as in that
+protocol.  See the UAMP RFC, Section 2.
+
+3. HIGH-LEVEL DESIGN
+====================
+
+The MVISP client and server first complete a handshake, in which the server
+specifies parameters for the movement data it is going to send to the
+client (note the distinction from the UAMP protocol, in which the client
+sends parameters to the server).  After the handshake is complete, the
+client requests mobility data updates from the server, just as in the UAMP
+protocol.  The MVISP client additionally sends CHANGE_STATE messages to the
+MVISP server, describing the time at which agents make state transitions.
+
+4. MESSAGE SPECIFICATION
+========================
+
+4A. INITIALIZATION PHASE
+------------------------
+
+After connecting to the server, the client sends a BEGIN_MVISP message to
+the server.  The server also sends a BEGIN_MVISP message to the client (an
+MVISP server MUST send the BEGIN_MVISP message, even if it receives a
+message other than a BEGIN_MVISP message from the client, and vice versa).
+
+BEGIN_MVISP: 0x4d 0x56 0x49 0x53 VERSIONS_SUPPORTED UAMP_FLAGS
+
+That is, the BEGIN_MVISP message is the four ASCII characters "MVIS" followed
+the VERSIONS_SUPPORTED and UAMP_FLAGS fields.
+
+The VERSIONS_SUPPORTED and UAMP_FLAGS are treated identically to those in the
+UAMP protocol (see the UAMP RFC, Section 4A).  If one party does not receive a
+BEGIN_MVISP message from the other, or if there are any VERSIONS_SUPPORTED or
+UAMP_FLAGS errors (as outlined in the UAMP RFC, Section 4A), the receiver must
+reply with an INITIALIZATION_FAILED message (as in the UAMP RFC).  Otherwise,
+VERSION_CHOICE messages are exchanged and verified (as in the UAMP RFC) and the
+client and server proceed to the SPECIFICATION PHASE (see Section 4B).
+
+4B. SPECIFICATION PHASE
+-----------------------
+
+The server begins the SPECIFICATION PHASE by sending a
+SIMULATION_SPECIFICATION message to the client.
+
+SIMULATION_SPECIFICATION: NUM_AGENTS TIME_LIMIT
+
+NUM_AGENTS: an Integer that MUST be greater than zero, denoting the number
+of unique mobile individuals that the server will simulate.
+
+TIME_LIMIT: a Time value, denoting the duration of the simulation.
+
+The client responds with either a STATE_SPECIFICATION message or a
+SPECIFICATION_DENIED message.
+
+SPECIFICATION_DENIED: the Integer 0x00000000
+
+If the response is a SPECIFICATION_DENIED message, the client and server
+MUST disconnect.
+
+STATE_SPECIFICATION: NUM_STATES NAME_LENGTH NAME_LENGTH ... STATE_NAME
+                     STATE_NAME ...
+
+NUM_STATES: an Integer which MUST be greater than zero, representing the
+number of unique states in which agents can be.
+
+Each state is indexed from 0.  That is, the first NAME_LENGTH contains
+information about state 0, as does the first STATE_NAME.  The second
+NAME_LENGTH and second STATE_NAME contain information about state 1, etc.  The
+number of NAME_LENGTH and STATE_NAME messages MUST be equal to NUM_STATES.
+
+NAME_LENGTH: an Integer denoting the length of the human-readable name of
+the corresponding state, which MUST be greater than zero.
+
+STATE_NAME: a sequence of Bytes representing the human-readable ASCII name
+of the state, with length equal to the corresponding NAME_LENGTH value.
+There is no null-termination of this string.  The ASCII_NAME for each state
+MUST be unique.
+
+4C. UPDATE PHASE
+----------------
+
+The client begins the UPDATE PHASE by sending one of three commands to the
+server: LOCATION_REQUEST, TERMINATE_SIMULATION, or CHANGE_STATE.
+
+The LOCATION_REQUEST and TERMINATE_SIMULATION messages are identical to
+those in the UAMP protocol, and are to be handled identically.  See the
+UAMP RFC, Section 4C.
+
+CHANGE_STATE: 0x02 NUM_CHANGES CHANGE CHANGE ...
+
+NUM_CHANGES: an Integer that MUST be greater than zero.  This value represents
+the number of CHANGE messages that will follow.
+
+CHANGE: AGENT_ID TIMESTAMP NEW_STATE
+
+AGENT_ID: an Integer that MUST be strictly less than NUM_AGENTS (see
+Section 4B).  That is, agents are indexed from 0 to NUM_AGENTS-1.
+
+TIMESTAMP: a Time value that MUST be less than or equal to TIME_LIMIT (see
+Section 4B).
+
+NEW_STATE: an Integer that MUST be strictly less than NUM_STATES (see
+Section 4B).  That is, states are indexed from 0 to NUM_STATES-1.
+
+The CHANGE message instructs the MVISP server to change agent AGENT_ID to state
+NEW_STATE at time TIMESTAMP.  All agents are implicitly in state 0 at time 0,
+unless otherwise specified by the MVISP client.
+
+CHANGE messages are NOT REQUIRED to be sent in any monotonic order with respect
+their TIMESTAMP values.  If the client, over the course of the protocol, sends
+multiple CHANGE_STATE messages with the same AGENT_ID and TIMESTAMP values, the
+server MUST interpret the last message as overriding any such previous
+messages.
+
+After a CHANGE_STATE message is sent, both the server and client return to
+the beginning of the UPDATE PHASE.
