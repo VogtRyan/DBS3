@@ -31,6 +31,11 @@ import javax.swing.event.*;
  */
 public abstract class DialogUserInput extends DialogCancellable {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The OK button.
      */
     private JButton okButton;
@@ -235,6 +240,11 @@ public abstract class DialogUserInput extends DialogCancellable {
      * not be enabled).
      */
     private class EnterKeyAction extends AbstractAction {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Translates a press of the enter key into a click of the OK button.
          *

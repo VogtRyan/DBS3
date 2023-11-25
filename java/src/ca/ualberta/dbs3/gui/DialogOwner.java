@@ -26,6 +26,11 @@ import javax.swing.*;
  */
 public class DialogOwner extends JFrame {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The linked list of all dialogs owned by this frame, with elements at the
      * front of the list having had focus more recently.
      */

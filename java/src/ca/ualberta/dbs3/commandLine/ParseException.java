@@ -22,6 +22,11 @@ package ca.ualberta.dbs3.commandLine;
  */
 public class ParseException extends Exception {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>ParseException</code> with the given message.
      *
      * @param message the detail message.

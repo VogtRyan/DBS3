@@ -841,5 +841,15 @@ public abstract class Client {
             }
             return false;
         }
+
+        /**
+         * Returns a hash code for this <code>UAMPUpdate</code>.
+         *
+         * @return a hash code for this <code>UAMPUpdate</code>, equal to the
+         *         hash code of its x coordinate.
+         */
+        public int hashCode() {
+            return this.x.hashCode();
+        }
     }
 }

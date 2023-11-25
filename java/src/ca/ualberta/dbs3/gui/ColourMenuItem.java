@@ -34,6 +34,11 @@ public abstract class ColourMenuItem extends JMenuItem {
     private static final int ICON_SIZE = 16;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The parent window over which we should display the dialog box.
      */
     private MainFrame parent;

@@ -30,6 +30,11 @@ public class ColourDialog extends DialogUserInput {
     private static final int PREVIEW_SIZE = 50;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The red text field.
      */
     private UserIntegerField red;
@@ -168,6 +173,11 @@ public class ColourDialog extends DialogUserInput {
      * preview of the input colour to the user.
      */
     private class PreviewSwatch extends JPanel {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Paints the desired colour.
          */

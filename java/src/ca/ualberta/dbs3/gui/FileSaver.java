@@ -116,6 +116,11 @@ public class FileSaver {
      */
     private class ConfirmChooser extends JFileChooser {
         /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Creates a new <code>ConfirmChooser</code> starting in the given
          * directory.
          *

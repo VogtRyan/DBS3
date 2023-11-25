@@ -23,6 +23,11 @@ package ca.ualberta.dbs3.network;
  */
 public class UAMPException extends Exception {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>UAMPException</code> with the given message.
      *
      * @param message the detail message.

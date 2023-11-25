@@ -24,6 +24,11 @@ import ca.ualberta.dbs3.commandLine.InputFileException;
  */
 public class MapFileException extends InputFileException {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>MapFileException</code> with the given error having
      * happened in the given file.
      *

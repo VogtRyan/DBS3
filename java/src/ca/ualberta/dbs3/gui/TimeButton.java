@@ -28,6 +28,11 @@ import javax.swing.*;
  */
 public class TimeButton extends JButton {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The <code>Command</code> enumeration represents the different available
      * types of {@link TimeButton}s.
      */

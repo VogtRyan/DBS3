@@ -24,6 +24,11 @@ import javax.swing.text.*;
  */
 public class UserIntegerField extends UserTextField {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>UserIntegerField</code> containing the given value.
      *
      * @param initialValue the initial value the field will contain.
@@ -91,6 +96,11 @@ public class UserIntegerField extends UserTextField {
      * contain only a single non-negative integer.
      */
     private class IntegerDocument extends PlainDocument {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Inserts a string of content, if it conforms to the required integer
          * structure.

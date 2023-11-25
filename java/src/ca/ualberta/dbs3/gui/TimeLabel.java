@@ -24,6 +24,11 @@ import javax.swing.*;
  */
 public class TimeLabel extends JLabel {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>TimeLabel</code> displaying time zero.
      */
     public TimeLabel() {

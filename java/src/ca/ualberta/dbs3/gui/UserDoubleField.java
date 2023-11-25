@@ -24,6 +24,11 @@ import javax.swing.text.*;
  */
 public class UserDoubleField extends UserTextField {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>UserDoubleField</code> containing the given value.
      *
      * @param initialValue the initial value the field will contain.
@@ -64,6 +69,11 @@ public class UserDoubleField extends UserTextField {
      * contain only a single non-negative floating point value.
      */
     private class DoubleDocument extends PlainDocument {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Inserts a string of content, if it conforms to the required floating
          * point structure.

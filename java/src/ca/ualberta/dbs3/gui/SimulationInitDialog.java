@@ -32,6 +32,11 @@ public class SimulationInitDialog extends DialogCancellable {
             "Waiting for simulation initialization to begin...";
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The simulation builder to inform if the action is cancelled.
      */
     private SimulationBuilder builder;

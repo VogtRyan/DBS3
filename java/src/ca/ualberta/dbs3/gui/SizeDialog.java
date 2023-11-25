@@ -22,6 +22,11 @@ package ca.ualberta.dbs3.gui;
  */
 public class SizeDialog extends DialogUserInput {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The text field containing the size of agents.
      */
     private UserIntegerField size;
