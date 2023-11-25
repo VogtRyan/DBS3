@@ -56,6 +56,11 @@ public class MainFrame extends DialogOwner {
     private static final int COLOUR_SEPARATOR_INDEX = 3;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The DBS3 map file opened in this window.
      */
     private String filename;
@@ -676,6 +681,11 @@ public class MainFrame extends DialogOwner {
      */
     private class StreetColourItem extends ColourMenuItem {
         /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Creates a new <code>StreetColourItem</code>.
          */
         public StreetColourItem() {
@@ -708,6 +718,11 @@ public class MainFrame extends DialogOwner {
      * displaying a menu item and dialog for changing the intersection colour.
      */
     private class IntersectionColourItem extends ColourMenuItem {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Creates a new <code>IntersectionColourItem</code>.
          */
@@ -743,6 +758,11 @@ public class MainFrame extends DialogOwner {
      */
     private class DestinationColourItem extends ColourMenuItem {
         /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Creates a new <code>DestinationColourItem</code>.
          */
         public DestinationColourItem() {
@@ -776,6 +796,11 @@ public class MainFrame extends DialogOwner {
      * menu item and dialog for changing the colour of agents in a given state.
      */
     private class StateColourItem extends ColourMenuItem {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * The state being controlled by this menu item.
          */
@@ -821,6 +846,11 @@ public class MainFrame extends DialogOwner {
      * keyboard input.
      */
     private class GroupIndexAction extends AbstractAction {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * The menu item group to modify.
          */

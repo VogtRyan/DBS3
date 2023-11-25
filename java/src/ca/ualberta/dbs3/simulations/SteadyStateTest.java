@@ -803,6 +803,11 @@ public class SteadyStateTest extends Application {
      */
     public class SteadyStateFileException extends InputFileException {
         /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * Creates a new <code>SteadyStateFileException</code> with the given
          * error having happened in the given file.
          *

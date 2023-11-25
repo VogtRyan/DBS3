@@ -22,6 +22,11 @@ package ca.ualberta.dbs3.gui;
  */
 public class PreferencesFileException extends Exception {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>PreferencesFileException</code> with the given
      * message.
      *

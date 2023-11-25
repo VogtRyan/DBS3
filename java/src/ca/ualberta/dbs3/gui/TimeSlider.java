@@ -29,6 +29,11 @@ public class TimeSlider extends JSlider {
     private static final int MAX_SLIDER = 100000000;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The maximum number of milliseconds expressible on this slider.
      */
     private long max;

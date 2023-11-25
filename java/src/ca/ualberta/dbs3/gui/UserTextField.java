@@ -36,6 +36,11 @@ public class UserTextField extends JTextField {
     private static final Color BAD_INPUT = Color.RED;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Whether the text is currently legal.
      */
     private boolean isLegal;

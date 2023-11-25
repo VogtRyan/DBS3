@@ -29,6 +29,11 @@ import javax.swing.*;
  */
 public abstract class DialogCancellable extends JDialog {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The owner frame or dialog.
      */
     private Window owner;
@@ -200,6 +205,11 @@ public abstract class DialogCancellable extends JDialog {
      * subclass cancellation actions and disposing of the dialog.
      */
     private class EscapeKeyAction extends AbstractAction {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Called when the user presses the escape key.
          *

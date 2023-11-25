@@ -157,6 +157,16 @@ public class Preferences {
     }
 
     /**
+     * Returns a hash code for this <code>Preferences</code> object.
+     *
+     * @return a hash code for this <code>Preferences</code> object, equal to
+     *         its agent size.
+     */
+    public int hashCode() {
+        return this.agentSize;
+    }
+
+    /**
      * Adds the given observer to the list of observers to be notified when the
      * preferences are modified.
      *

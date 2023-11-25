@@ -32,6 +32,11 @@ import javax.swing.*;
  */
 public class MainFrameImage extends JPanel {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The map being displayed.
      */
     private Map map;

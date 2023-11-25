@@ -27,6 +27,11 @@ import javax.swing.*;
  */
 public class UserEnabler extends JCheckBox {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The components that this enabler enables or disables.
      */
     private ArrayList<JComponent> components;

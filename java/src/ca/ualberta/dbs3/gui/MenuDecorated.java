@@ -25,6 +25,11 @@ import javax.swing.*;
  */
 public class MenuDecorated extends JMenu {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>MenuDecorated</code> with the given text.
      *
      * @param text the text to display for the menu.

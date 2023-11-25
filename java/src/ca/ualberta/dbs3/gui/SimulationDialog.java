@@ -28,6 +28,11 @@ import javax.swing.*;
  */
 public class SimulationDialog extends DialogUserInput {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The main frame to which this simulation configuration window belongs.
      */
     private MainFrame parent;

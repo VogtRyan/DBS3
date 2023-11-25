@@ -73,6 +73,11 @@ public class MainFrameControls extends JPanel {
     private static final long GRACE_MILLISECONDS = 1500;
 
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The button that returns to the beginning of the simulation.
      */
     private TimeButton beginningButton;
@@ -791,6 +796,11 @@ public class MainFrameControls extends JPanel {
      */
     private class TimeAction extends AbstractAction {
         /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * The amount by which to modify the time.
          */
         private long amount;
@@ -828,6 +838,11 @@ public class MainFrameControls extends JPanel {
      * button when a certain keyboard input is performed.
      */
     private class ClickAction extends AbstractAction {
+        /**
+         * Unused serialization version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * The button to click.
          */

@@ -24,6 +24,11 @@ import java.io.*;
  */
 public class InputFileException extends Exception {
     /**
+     * Unused serialization version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Creates a new <code>InputFileException</code> with the given error
      * having happened in the given file.
      *
