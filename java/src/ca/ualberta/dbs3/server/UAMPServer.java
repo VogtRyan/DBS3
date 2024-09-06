@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Ryan Vogt <rvogt@ualberta.ca>
+ * Copyright (c) 2009-2024 Ryan Vogt <rvogt@ualberta.ca>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -102,17 +102,52 @@ public class UAMPServer extends Application {
         Range speed = opSpeed.getRange();
         Range pause = opPause.getRange();
 
+        try (ServerSocket socket = openServerSocket(opPort.getPort())) {
+            /* Inform the user we are ready for connections, or daemonize */
+            if (opDaemonize.daemonize())
+                this.daemonizeMsgAndClose(opPort.getPort());
+            else
+                System.out.println("Now accepting connections on port "
+                        + opPort.getPort());
+
+            /* Wait for incoming connections */
+            while (true) {
+                try {
+                    Socket connection = socket.accept();
+                    Thread thread = new ServerThreadUAMP(speed, pause,
+                            destChooser, pathfinder, connection);
+                    thread.start();
+                } catch (IOException ioe) {
+                    String str = Application.throwableToString(ioe);
+                    System.err.println(str);
+                }
+            }
+        }
+    }
+
+    /**
+     * Attempt to open a server socket. If the socket fails to bind, repeat the
+     * attempt until a maximum timeout has been reached.
+     *
+     * @param portNum the port number on which to open the server socket.
+     * @return the opened server socket.
+     * @throws IOException if the server socket fails to open after the maximum
+     *         timeout, or if a non-binding exception occurs while attempting
+     *         to open the socket.
+     */
+    private ServerSocket openServerSocket(int portNum) throws IOException {
+        ServerSocket socket = null;
+        long timeout = 0;
+
         /*
          * Open the socket. If UAMPServer is part of a large experiment, in
          * which servers are started and killed by scripts, it often happens
          * that a socket isn't ready for binding right as a new UAMPServer
          * starts. Wait for a while to see if a socket clears up.
          */
-        ServerSocket socket = null;
-        long timeout = 0;
         while (true) {
             try {
-                socket = new ServerSocket(opPort.getPort());
+                socket = new ServerSocket(portNum);
             } catch (BindException be) {
                 if (timeout >= UAMPServer.MAX_TIMEOUT_MS)
                     throw be;
@@ -126,25 +161,7 @@ public class UAMPServer extends Application {
             timeout += UAMPServer.TIMEOUT_MS;
         }
 
-        /* Inform the user we are ready for connections, or daemonize */
-        if (opDaemonize.daemonize())
-            this.daemonizeMsgAndClose(opPort.getPort());
-        else
-            System.out.println(
-                    "Now accepting connections on port " + opPort.getPort());
-
-        /* Wait for incoming connections */
-        while (true) {
-            try {
-                Socket connection = socket.accept();
-                Thread thread = new ServerThreadUAMP(speed, pause, destChooser,
-                        pathfinder, connection);
-                thread.start();
-            } catch (IOException ioe) {
-                String str = Application.throwableToString(ioe);
-                System.err.println(str);
-            }
-        }
+        return socket;
     }
 
     /**
