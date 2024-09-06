@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Ryan Vogt <rvogt@ualberta.ca>
+ * Copyright (c) 2009-2024 Ryan Vogt <rvogt@ualberta.ca>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
