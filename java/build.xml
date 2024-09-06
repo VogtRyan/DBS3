@@ -20,7 +20,7 @@
     <property name="outputDir" value="./class/" />
     <property name="javadocDir" value="./javadoc/" />
     <property name="liboutDir" value="./libout/" />
-    <property name="libFile" value="dbs3-1.2.1.jar" />
+    <property name="libFile" value="dbs3-1.2.2.jar" />
   </target>
   <target name="compile" depends="init">
     <depend srcdir="${sourceDir}" destDir="${outputDir}" />
