@@ -336,11 +336,8 @@ public class SteadyStateTest extends Application {
 
         /* Read the input file line-by-line */
         int line = 0;
-        try {
-            Scanner scanner = new Scanner(new File(experimentFile));
-            while (true) {
-                if (scanner.hasNextLine() == false)
-                    break;
+        try (Scanner scanner = new Scanner(new File(experimentFile))) {
+            while (scanner.hasNextLine()) {
                 line++;
                 String lineStr = scanner.nextLine().trim();
                 int commentIndex = lineStr.indexOf('#');
