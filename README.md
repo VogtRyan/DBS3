@@ -16,7 +16,7 @@ The Destination-Based Space Syntax Simulator
 
 ## Copyright and License
 
-Copyright (c) 2007-2023 Ryan Vogt <rvogt@ualberta.ca>
+Copyright (c) 2007-2024 Ryan Vogt <rvogt@ualberta.ca>
 
 This software is released under the ISC license. See the `LICENSE` file for
 more details.
