@@ -191,7 +191,7 @@ will be installed in `${UAMP_PREFIX}/lib/`, and the header file in
 `${UAMP_PREFIX}/include/`:
 ```
 % export UAMP_PREFIX=/usr/local
-% sudo make install
+% sudo UAMP_PREFIX=${UAMP_PREFIX} make install
 ```
 
 If `UAMP_PREFIX` is not set, the library will be installed by default in this
